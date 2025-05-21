@@ -1,0 +1,283 @@
+/* Reset e base */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f0f4f8, #dbeafe);
+    color: #1e3a8a;
+    min-height: 100vh;
+  }
+  
+  /* Container principale */
+  .page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 2rem 1rem;
+    background-color: #1e3a8a;
+    color: white;
+  }
+  
+  .header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Main dashboard */
+  .dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+    gap: 2rem;
+  }
+  
+  @media (min-width: 768px) {
+    .dashboard {
+      flex-direction: row;
+      justify-content: center;
+    }
+  }
+  
+  /* Card */
+  .card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem 2rem;
+    width: 280px;
+    text-align: center;
+    text-decoration: none;
+    color: #1e3a8a;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .card p {
+    font-size: 1rem;
+    color: #334155;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Footer */
+  .footer {
+    margin-top: auto;
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.9rem;
+    background-color: #f1f5f9;
+    color: #475569;
+  }
+  
+
+  .form-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+  
+  .form-box {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+  
+  .form-box label {
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+    color: #1e3a8a;
+  }
+  
+  .form-box input,
+  .form-box textarea,
+  .form-box select {
+    padding: 0.8rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 1rem;
+    background-color: #f8fafc;
+    transition: border-color 0.2s;
+  }
+  
+  .form-box input:focus,
+  .form-box textarea:focus,
+  .form-box select:focus {
+    outline: none;
+    border-color: #38bdf8;
+  }
+  
+  .btn {
+    padding: 0.8rem;
+    background-color: #1e40af;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  .btn:hover {
+    background-color: #1d4ed8;
+    transform: scale(1.02);
+  }
+  
+
+  .title {
+    text-align: center;
+    margin: 2rem 0 1rem;
+    color: #1e3a8a;
+  }
+  
+  .table-box {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+    overflow-x: auto;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 0.95rem;
+  }
+  
+  th, td {
+    padding: 0.8rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  thead {
+    background-color: #eff6ff;
+  }
+  
+  tbody tr:hover {
+    background-color: #f0f9ff;
+  }
+  
+/* Reset di base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f7fa;
+  color: #333;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
+  font-size: 2em;
+}
+
+/* Stile per il contenitore del modulo */
+form {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Stile per le etichette del form */
+label {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* Stile per gli input e select */
+input[type="text"],
+select {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0 20px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+}
+
+/* Focus sugli input e select */
+input[type="text"]:focus,
+select:focus {
+  border-color: #007BFF;
+  outline: none;
+}
+
+/* Bottone per inviare il form */
+button {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1.1em;
+  cursor: pointer;
+  border-radius: 4px;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover sul bottone */
+button:hover {
+  background-color: #218838;
+}
+
+/* Messaggi di errore o successo */
+p {
+  font-size: 1.2em;
+  font-weight: bold;
+  text-align: center;
+}
+
+p[style="color: red;"] {
+  color: #dc3545;
+}
+
+p[style="color: green;"] {
+  color: #28a745;
+}
+
+/* Layout del modulo */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+ 

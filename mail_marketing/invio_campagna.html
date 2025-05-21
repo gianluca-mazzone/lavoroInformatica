@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invia Campagna - Mail Marketing</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page">
+    <header class="header">
+      <h1>📧 Invia Campagna Email</h1>
+      <p>Crea una nuova campagna per i tuoi clienti</p>
+    </header>
+
+    <main class="form-wrapper">
+      <form action="invio_mail.php" method="POST" class="form-box">
+        <label for="nome">Nome Campagna</label>
+        <input type="text" id="nome" name="nome" required placeholder="Es. Primavera 2025">
+
+        <label for="descrizione">Descrizione</label>
+        <textarea id="descrizione" name="descrizione" rows="4" placeholder="Descrizione breve della campagna"></textarea>
+
+        <label for="destinatari">Destinatari</label>
+        <select id="destinatari" name="destinatari">
+          <option value="tutti">Tutti i clienti</option>
+          <option value="dormienti">Solo Dormienti</option>
+          <option value="pigri">Solo Pigri</option>
+          <option value="curiosi">Solo Curiosi</option>
+          <option value="interessati">Solo Interessati</option>
+          <option value="entusiasti">Solo Entusiasti</option>
+        </select>
+
+        <button type="submit" class="btn">🚀 Invia Campagna</button>
+      </form>
+    </main>
+
+    <footer class="footer">
+      <p>© 2025 Mail Marketing Project - Progetto Scuola</p>
+    </footer>
+  </div>
+</body>
+</html>
