@@ -1,7 +1,7 @@
 <?php
-$host = 'sql213.infinityfree.com';
-$user = 'if0_39043708';
-$pass = 'nqODCBJsf8GZG';
+$host = 'localhost';
+$user = 'root';
+$pass = '';
 $dbname = 'if0_39043708_mail_marketing';
 
 $conn = new mysqli($host, $user, $pass, $dbname);

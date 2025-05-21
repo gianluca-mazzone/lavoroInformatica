@@ -1,5 +1,3 @@
--- Creazione database (solo se non esiste)
-CREATE DATABASE IF NOT EXISTS if0_39043708_mail_marketing DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE if0_39043708_mail_marketing;
 
 -- Responsabili
