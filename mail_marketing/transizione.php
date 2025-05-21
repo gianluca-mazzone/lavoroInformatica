@@ -1,61 +1,55 @@
 <?php
 require_once 'includes/db.php';
 
-// Ottieni l'ID del cliente dalla query string (o da POST se necessario)
-$id_cliente = isset($_GET['id_cliente']) ? $_GET['id_cliente'] : null;
+$id_cliente = isset($_GET['id_cliente']) ? intval($_GET['id_cliente']) : null;
 $errore = "";
 $successo = "";
+$cliente = null;
 
 if ($id_cliente) {
-    // Recupera i dati del cliente (email)
-    $result = mysqli_query($conn, "SELECT email FROM Cliente WHERE ID_Cliente = '$id_cliente'");
+    $stmt = $conn->prepare("SELECT nome, cognome, email, stato_classificazione FROM Cliente WHERE ID_Cliente = ?");
+    $stmt->bind_param("i", $id_cliente);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    if ($result && mysqli_num_rows($result) > 0) {
-        // Se il cliente esiste, recupera l'email
-        $cliente = mysqli_fetch_assoc($result);
+    if ($result && $result->num_rows > 0) {
+        $cliente = $result->fetch_assoc();
+        $stato_attuale = $cliente['stato_classificazione'];
+        $stati = ['dormiente', 'pigro', 'curioso', 'interessato', 'entusiasta'];
 
-        // Verifica se il form è stato inviato
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Ottieni l'ID della transizione dal form
-            $id_transizione = $_POST['id_transizione'];
-            $id_campagna = $_POST['id_campagna'];
+            $id_campagna = intval($_POST['id_campagna']);
             $nuovo_stato = $_POST['nuovo_stato'];
             $data = date('Y-m-d');
 
-            // Verifica se l'ID della transizione è valido (es. numerico)
-            if (is_numeric($id_transizione)) {
-                // Query per inserire la transizione
-                $query = "INSERT INTO Transizione (ID_Transizione, id_cliente, id_campagna, nuova_situazione, data) 
-                          VALUES ('$id_transizione', '$id_cliente', '$id_campagna', '$nuovo_stato', '$data')";
-
-                if (mysqli_query($conn, $query)) {
-                    // Aggiorna lo stato del cliente
-                    $update_query = "UPDATE Cliente 
-                                     SET stato_attuale = '$nuovo_stato', data_ultimo_aggiornamento = '$data' 
-                                     WHERE ID_Cliente = '$id_cliente'";
-
-                    if (mysqli_query($conn, $update_query)) {
-                        $successo = "Transizione registrata con successo!";
-                    } else {
-                        $errore = "Errore nell'aggiornare lo stato del cliente.";
-                    }
+            $pos_attuale = array_search($stato_attuale, $stati);
+            $pos_nuovo = array_search($nuovo_stato, $stati);
+            if ($pos_nuovo === false || $pos_nuovo <= $pos_attuale) {
+                $errore = "Non puoi retrocedere di stato!";
+            } else {
+                // Registra transizione
+                $query = "INSERT INTO Transizioni (id_cliente, stato_precedente, stato_successivo, data_transizione, id_campagna) VALUES (?, ?, ?, ?, ?)";
+                $stmt = $conn->prepare($query);
+                $stmt->bind_param("isssi", $id_cliente, $stato_attuale, $nuovo_stato, $data, $id_campagna);
+                if ($stmt->execute()) {
+                    // Aggiorna stato e data
+                    $update_query = "UPDATE Cliente SET stato_classificazione = ?, data_ultima_classificazione = ? WHERE ID_Cliente = ?";
+                    $stmt2 = $conn->prepare($update_query);
+                    $stmt2->bind_param("ssi", $nuovo_stato, $data, $id_cliente);
+                    $stmt2->execute();
+                    $successo = "Transizione registrata con successo!";
                 } else {
                     $errore = "Errore durante la registrazione della transizione.";
                 }
-            } else {
-                $errore = "ID Transizione non valido.";
             }
         }
-
-        // Recupera le campagne disponibili
-        $campagne = mysqli_query($conn, "SELECT ID_Campagna, nome FROM Campagna ORDER BY data_invio DESC");
+        $campagne = mysqli_query($conn, "SELECT ID_Campagna, nome_campagna FROM Campagna ORDER BY data_invio DESC");
     } else {
         $errore = "Cliente non trovato.";
     }
 } else {
     $errore = "ID Cliente non valido.";
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -68,41 +62,36 @@ if ($id_cliente) {
 <body>
     <div class="container">
         <h1>📤 Registra Transizione per il Cliente</h1>
-
         <?php if ($errore): ?>
-            <p class="error"><?= $errore ?></p>
+            <p class="error"><?= htmlspecialchars($errore) ?></p>
         <?php endif; ?>
-
         <?php if ($cliente): ?>
-            <p><strong>Email cliente:</strong> <?= htmlspecialchars($cliente['email']) ?></p>
-
+            <p><strong>Nome:</strong> <?= htmlspecialchars($cliente['nome']) ?> <?= htmlspecialchars($cliente['cognome']) ?></p>
+            <p><strong>Email:</strong> <?= htmlspecialchars($cliente['email']) ?></p>
+            <p><strong>Stato attuale:</strong> <?= htmlspecialchars($cliente['stato_classificazione']) ?></p>
             <?php if ($successo): ?>
-                <p class="success"><?= $successo ?></p>
+                <p class="success"><?= htmlspecialchars($successo) ?></p>
             <?php endif; ?>
-
-            <form method="POST">
-                <label for="id_transizione">ID Transizione:</label><br>
-                <input type="text" name="id_transizione" required><br><br>
-
-                <label for="id_campagna">Campagna:</label><br>
+            <form method="POST" class="form-box">
+                <label for="id_campagna">Campagna:</label>
                 <select name="id_campagna" required>
                     <option value="">-- Seleziona --</option>
                     <?php while ($row = mysqli_fetch_assoc($campagne)): ?>
-                        <option value="<?= $row['ID_Campagna'] ?>"><?= htmlspecialchars($row['nome']) ?></option>
+                        <option value="<?= $row['ID_Campagna'] ?>"><?= htmlspecialchars($row['nome_campagna']) ?></option>
                     <?php endwhile; ?>
-                </select><br><br>
-
-                <label for="nuovo_stato">Nuovo stato:</label><br>
+                </select><br>
+                <label for="nuovo_stato">Nuovo stato:</label>
                 <select name="nuovo_stato" required>
-                    <option value="pigro">Pigro</option>
-                    <option value="curioso">Curioso</option>
-                    <option value="interessato">Interessato</option>
-                    <option value="entusiasta">Entusiasta</option>
-                </select><br><br>
-
-                <button type="submit">✅ Salva Transizione</button>
+                    <?php
+                    $stati_avanzamento = array_slice($stati, array_search($cliente['stato_classificazione'], $stati) + 1);
+                    foreach ($stati_avanzamento as $stato) {
+                        echo "<option value=\"$stato\">" . ucfirst($stato) . "</option>";
+                    }
+                    ?>
+                </select><br>
+                <button type="submit" class="btn">✅ Salva Transizione</button>
             </form>
-
+            <a href="clienti.php" class="btn">⬅️ Torna ai clienti</a>
         <?php else: ?>
             <p>Cliente non trovato.</p>
         <?php endif; ?>
